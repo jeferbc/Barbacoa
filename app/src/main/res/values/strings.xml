@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Barbacoa</string>
+    <string name="Usuario">Usuario</string>
+    <string name="Contraseña">Contraseña</string>
+    <string name="Contraseña1">Repita Contraseña</string>
+    <string name="Entrar">Entrar</string>
+    <string name="Registro">Registrar</string>
+    <string name="Correo">Correo</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="MiPerfil">Mi Perfil</string>
+    <string name="Inicio">Inicio</string>
+    <string name="Hamburguesas">Hamburguesas</string>
+    <string name="Otros">Otros</string>
+    <string name="Cervezas">Cervezas</string>
+    <string name="Menu">Menu</string>
+
+
+</resources>
