@@ -1,84 +1,103 @@
 package jeffersonbernalcardona.barbacoa;
 
+
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     String lUser,lCorreo;
+    private String[] opciones = new String[]{
+            "Mi Perfil",
+            "Menu"
+    };
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle drawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Bundle extras = getIntent().getExtras();           //obtiene el intent que lo llevo alli, y obtiene los extras
-        lUser = extras.getString("Usuario");
-        lCorreo = extras.getString("Correo");
+        getstring();
+        initialize();
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.contenedorPrincipal);
+        mDrawerList = (ListView) findViewById(R.id.MenuIzq);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(getSupportActionBar().getThemedContext(),android.R.layout.simple_list_item_1, opciones));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent,intentMenu;
+                Log.d ("entro","si");
+                    switch (i){
+                        case(0):
+                            Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
+                            intent=new Intent(getApplicationContext(),ProfileActivity.class);
+                            intent.putExtra("Usuario",lUser);
+                            intent.putExtra("Correo",lCorreo);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case(1):
+                            Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
+                            intentMenu=new Intent(getApplicationContext(),MenuActivity.class);
+                            intentMenu.putExtra("Usuario",lUser);
+                            intentMenu.putExtra("Correo",lCorreo);
+                            startActivity(intentMenu);
+                            finish();
+                            break;
+                    }
+                mDrawerList.setItemChecked(i,true);
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        drawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,R.string.Abierto,R.string.Cerrado);
+        mDrawerLayout.setDrawerListener(drawerToggle);
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu,menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.mMiperfil:
-                Intent intent=new Intent(this,ProfileActivity.class);
-                intent.putExtra("Usuario",lUser);
-                intent.putExtra("Correo",lCorreo);
-                startActivity(intent);
-                break;
-            case R.id.mMenu:
-                Intent intentMenu=new Intent(this,MenuActivity.class);
-                intentMenu.putExtra("Usuario",lUser);
-                intentMenu.putExtra("Correo",lCorreo);
-                startActivity(intentMenu);
-                break;
+        switch (item.getItemId()){
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(Gravity.START);
+                return true;
+
+
         }
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        Toast.makeText(this,"OnStart",Toast.LENGTH_SHORT).show();
+    public void getstring (){
+        Bundle extras = getIntent().getExtras();           //obtiene el intent que lo llevo alli, y obtiene los extras
+        lUser = extras.getString("Usuario");
+        lCorreo = extras.getString("Correo");
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Toast.makeText(this,"OnDestroy",Toast.LENGTH_SHORT).show();
+    public void initialize(){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar!=null){
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Toast.makeText(this,"OnPause",Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Toast.makeText(this,"OnResume",Toast.LENGTH_SHORT).show();
-    }
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Toast.makeText(this,"OnStop",Toast.LENGTH_SHORT).show();
-    }
-
-    protected void onRestart() {
-        super.onRestart();
-        Toast.makeText(this,"OnRestart",Toast.LENGTH_SHORT).show();
-    }*/
 
 
 }
