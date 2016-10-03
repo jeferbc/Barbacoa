@@ -1,6 +1,7 @@
 package jeffersonbernalcardona.barbacoa;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,21 +14,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Button bRegistro,bEntrar;
     EditText eContrasena,eUsuario;
     private  String rUser,rContrasena=null,lUser,lContrasena=null,rCorreo;
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         Initialize();
-
-
-        /*Bundle extras=getIntent().getExtras();           //obtiene el intent que lo llevo alli, y obtiene los extras
-
-        String user=extras.getString("Usuario");
-        String pass=extras.getString("Contrasena");
-
-        Toast.makeText(this, "User: "+user+ " Contraseña: "+pass,Toast.LENGTH_SHORT).show();*/
-
-
     }
 
     @Override
@@ -46,7 +40,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     intentMain.putExtra("Usuario",rUser);
                     intentMain.putExtra("Contrasena",rContrasena);
                     intentMain.putExtra("Correo",rCorreo);
+                    finish();
                     startActivity(intentMain);
+                    editor.putInt("entro",1);
+                    editor.putString("Usuario",rUser);
+                    editor.putString("Contraseña",rContrasena);
+                    editor.putString("Correo",rCorreo);
+                    editor.commit();
+                    Log.d("entro",String.valueOf(prefs.getInt("entro",-1)));
                 }else {
                     Toast.makeText(this, "Usuario o contraseña no es correcta", Toast.LENGTH_SHORT).show();
                 }
@@ -72,6 +73,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
     private void Initialize(){
+        prefs = getPreferences(MODE_PRIVATE);
+        editor = prefs.edit();
+        if(prefs.getInt("entro",-1)==1){
+            finish();
+            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+            startActivity(intent);
+        }
         bRegistro=(Button)findViewById(R.id.Registrar);
         bEntrar=(Button)findViewById(R.id.Entrar);
         eContrasena=(EditText)findViewById(R.id.Contraseña);
@@ -81,11 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
     public boolean match(){
-        if(lUser.equals(rUser) && lContrasena.equals(rContrasena)){
-            return true;
-        }else{
-            return false;
-        }
+        return lUser.equals(rUser) && lContrasena.equals(rContrasena);
 
     }
     public void GetInfo(){

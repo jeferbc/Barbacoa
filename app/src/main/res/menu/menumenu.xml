@@ -5,6 +5,6 @@
         android:title="@string/Inicio"/>
     <item
         android:id="@+id/mMiperfil"
-        android:title="@string/Menu"/>
+        android:title="@string/MiPerfil"/>
 
 </menu>

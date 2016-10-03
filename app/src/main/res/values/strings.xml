@@ -13,6 +13,8 @@
     <string name="Otros">Otros</string>
     <string name="Cervezas">Cervezas</string>
     <string name="Menu">Menu</string>
+    <string name="Abierto">Open Navigation Drawer</string>
+    <string name="Cerrado">Close Navigation Drawer</string>
 
 
 </resources>
