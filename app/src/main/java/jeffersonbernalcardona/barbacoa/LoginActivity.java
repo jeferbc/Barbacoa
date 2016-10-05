@@ -1,7 +1,9 @@
 package jeffersonbernalcardona.barbacoa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     Button bRegistro,bEntrar;
     EditText eContrasena,eUsuario;
+    private boolean Close;
     private  String rUser,rContrasena=null,lUser,lContrasena=null,rCorreo;
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
@@ -40,14 +43,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     intentMain.putExtra("Usuario",rUser);
                     intentMain.putExtra("Contrasena",rContrasena);
                     intentMain.putExtra("Correo",rCorreo);
+                    setDefaults("entro",1,this);
+                    setDefaults("Usuario",rUser,this);
+                    setDefaults("Contraseña",rContrasena,this);
+                    setDefaults("Correo",rCorreo,this);
                     finish();
                     startActivity(intentMain);
-                    editor.putInt("entro",1);
-                    editor.putString("Usuario",rUser);
-                    editor.putString("Contraseña",rContrasena);
-                    editor.putString("Correo",rCorreo);
-                    editor.commit();
-                    Log.d("entro",String.valueOf(prefs.getInt("entro",-1)));
                 }else {
                     Toast.makeText(this, "Usuario o contraseña no es correcta", Toast.LENGTH_SHORT).show();
                 }
@@ -68,14 +69,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             rUser=data.getExtras().getString("Usuario");
             rContrasena=data.getExtras().getString("Contrasena");
             rCorreo=data.getExtras().getString(("Correo"));
-            //Toast.makeText(this,"User: "+rUser+"Contraseña: "+rContrasena,Toast.LENGTH_SHORT);
+            Toast.makeText(this,"User: "+rUser+"Contraseña: "+rCorreo,Toast.LENGTH_SHORT).show();
 
         }
     }
     private void Initialize(){
-        prefs = getPreferences(MODE_PRIVATE);
-        editor = prefs.edit();
-        if(prefs.getInt("entro",-1)==1){
+        try{
+            Bundle extras = getIntent().getExtras();           //obtiene el intent que lo llevo alli, y obtiene los extras
+            Close = extras.getBoolean("Close");
+            setDefaults("entro",0,this);
+            rUser = getDefaultsString("Usuario",this);
+            rContrasena = getDefaultsString("Contraseña" , this);
+            rCorreo = getDefaultsString("Correo" , this);
+        }catch (Exception e){
+
+        }
+        if(getDefaults("entro",this)==1){
             finish();
             Intent intent = new Intent(LoginActivity.this,MainActivity.class);
             startActivity(intent);
@@ -93,8 +102,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
     public void GetInfo(){
-        lUser=eUsuario.getText().toString();
-        lContrasena=eContrasena.getText().toString();
+
+            lUser=eUsuario.getText().toString();
+            lContrasena=eContrasena.getText().toString();
+
+    }
+    public static void setDefaults(String key, String value, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
+    public static void setDefaults(String key, int value, Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(key, value);
+        editor.commit();
+    }
+    public static int getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getInt(key,-1);
+    }
+    public static String getDefaultsString(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key,"");
     }
 
 }

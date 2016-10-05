@@ -15,6 +15,20 @@
     <string name="Menu">Menu</string>
     <string name="Abierto">Open Navigation Drawer</string>
     <string name="Cerrado">Close Navigation Drawer</string>
+    <string name="Promocion1">Promocion1</string>
+    <string name="Promocion2">Promocion2</string>
+    <string name="Promocion3">Promocion3</string>
+    <string name="Promocion4">Promocion4</string>
+    <string name="Promocion5">Promocion5</string>
+    <string name="Promo1">Obten 20% de Descuento</string>
+    <string name="Promo2">Obten 20% de Descuento</string>
+    <string name="Promo3">Compra 2 lleva 3</string>
+    <string name="Promo4">Compra ensalada por la mitad del precio</string>
+    <string name="Promo5">Compra 6 lleva la 7 gratis</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

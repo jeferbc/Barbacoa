@@ -4,6 +4,7 @@ package jeffersonbernalcardona.barbacoa;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -30,15 +31,16 @@ public class MainActivity extends AppCompatActivity {
     String lUser,lCorreo;
     private String[] opciones = new String[]{
             "Mi Perfil",
-            "Menu"
+            "Menu",
+            "Promocion",
+            "Cerrar sesion"
     };
     private Promocion[] datos = new Promocion[]{
-            new Promocion(R.drawable.burguer,20000,"Hamburguesa","Con Papas Y Gaseosa"),
-            new Promocion(R.drawable.cerveza,5000,"Cerveza","Corona, Pilsen, Aguila"),
-            new Promocion(R.drawable.costilla,20000,"Costilla","Con Papas Y Gaseosa"),
-            new Promocion(R.drawable.spaghetti,15000,"Spaguetti","Con Papas Y Gaseosa"),
-            new Promocion(R.drawable.costilla,20000,"Costilla","Con Papas Y Gaseosa"),
-            new Promocion(R.drawable.spaghetti,15000,"Spaguetti","Con Papas Y Gaseosa")
+            new Promocion(R.drawable.burguer,20000,"Hamburguesa","20% de Descuento"),
+            new Promocion(R.drawable.burguer,15000,"Hamburguesa","20% de Descuento"),
+            new Promocion(R.drawable.heineken,5000,"Cerveza","Heineken"),
+            new Promocion(R.drawable.salad,12000,"Ensalada","Con Gaseosa"),
+            new Promocion(R.drawable.corona,5000,"Cerveza","Corona"),
     };
     private DrawerLayout mDrawerLayout;
     ListView mDrawerList;
@@ -57,15 +59,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText(getApplicationContext(),"presiono "+i,Toast.LENGTH_SHORT).show();
                 Log.d("Producto Presionado ",((Promocion)adapterView.getItemAtPosition(i)).getNombre());
-
+                Intent intent=new Intent(getApplicationContext(),PromocionActivity.class);
                 switch (i){
-                    case(0):break;
-                    case(1):break;
-                    case(2):break;
-                    case(3):break;
-                    case(4):break;
-                    case(5):break;
+                    case(0):intent.putExtra("Eleccion",i);break;
+                    case(1):intent.putExtra("Eleccion",i);break;
+                    case(2):intent.putExtra("Eleccion",i);break;
+                    case(3):intent.putExtra("Eleccion",i);break;
+                    case(4):intent.putExtra("Eleccion",i);break;
                 }
+                startActivity(intent);
             }
         });
         mDrawerList.setAdapter(new ArrayAdapter<String>(getSupportActionBar().getThemedContext(),android.R.layout.simple_list_item_1, opciones));
@@ -74,29 +76,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Intent intent,intentMenu;
-                Log.d ("entro","si");
-                Fragment fragment=null;
                     switch (i){
                         case(0):
-                            /*
                             Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
-                            intent=new Intent(getApplicationContext(),ProfileActivity.class);
+                            Intent intent=new Intent(getApplicationContext(),ProfileActivity.class);
                             intent.putExtra("Usuario",lUser);
                             intent.putExtra("Correo",lCorreo);
                             startActivity(intent);
-                            finish();*/
-                            fragment = new HamburguerFragment();break;
+                            break;
+
                         case(1):
-                            /*Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
-                            intentMenu=new Intent(getApplicationContext(),MenuActivity.class);
+                            Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
+                            Intent intentMenu=new Intent(getApplicationContext(),MenuActivity.class);
                             intentMenu.putExtra("Usuario",lUser);
                             intentMenu.putExtra("Correo",lCorreo);
                             startActivity(intentMenu);
-                            finish();*/
-                            fragment = new OthersFragment();break;
+                            break;
+                        case(2):
+                            Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
+                            Intent intentpromo=new Intent(getApplicationContext(),PromocionActivity.class);
+                            intentpromo.putExtra("Usuario",lUser);
+                            intentpromo.putExtra("Correo",lCorreo);
+                            startActivity(intentpromo);
+                            break;
+                        case(3):
+                            Toast.makeText(MainActivity.this,"presiono"+i,Toast.LENGTH_SHORT).show();
+                            Intent intentlogin=new Intent(getApplicationContext(),LoginActivity.class);
+                            intentlogin.putExtra("Usuario",lUser);
+                            intentlogin.putExtra("Contraseña",lCorreo);
+                            intentlogin.putExtra("Close",true);
+                            startActivity(intentlogin);
+                            finish();
+                            break;
                     }
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.contenedorFrame, fragment).commit();
                 mDrawerList.setItemChecked(i,true);
                 mDrawerLayout.closeDrawer(mDrawerList);
             }
@@ -124,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
             lUser = extras.getString("Usuario");
             lCorreo = extras.getString("Correo");
         }catch (Exception e){
-            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-            lUser = prefs.getString("Usuario","");
-            lCorreo = prefs.getString("Correo" , "");
+            lUser = getDefaults("Usuario",this);
+            lCorreo = getDefaults("Correo",this);
+            Toast.makeText(MainActivity.this,"Usuario y correo"+lUser + lCorreo,Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -169,6 +181,10 @@ public class MainActivity extends AppCompatActivity {
 
             return (item);
         }
+    }
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
     }
 }
 

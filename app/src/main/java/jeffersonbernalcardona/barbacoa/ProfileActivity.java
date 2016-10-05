@@ -1,6 +1,9 @@
 package jeffersonbernalcardona.barbacoa;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,28 +36,27 @@ public class ProfileActivity extends AppCompatActivity {
         switch (id){
             case R.id.Inicio:
                 Intent intent=new Intent(this,MainActivity.class);
-                intent.putExtra("Usuario",lUser);
-                intent.putExtra("Correo",lCorreo);
                 startActivity(intent);
                 break;
             case R.id.mMenu:
                 Intent intentMenu=new Intent(this,MenuActivity.class);
-                intentMenu.putExtra("Usuario",lUser);
-                intentMenu.putExtra("Correo",lCorreo);
                 startActivity(intentMenu);
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
     public void Initialize(){
-        Bundle extras=getIntent().getExtras();           //obtiene el intent que lo llevo alli, y obtiene los extras
-        lUser=extras.getString("Usuario");
-        lCorreo=extras.getString("Correo");
+        lUser=getDefaults("Usuario",this);
+        lCorreo=getDefaults("Correo",this);
         pCorreo=(TextView)findViewById(R.id.pCorreo);
         pUser=(TextView)findViewById(R.id.pUser);
     }
     public void SetText(){
         pUser.setText("Usuario: "+lUser);
         pCorreo.setText("Correo: "+lCorreo);
+    }
+    public static String getDefaults(String key, Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return preferences.getString(key, null);
     }
 }

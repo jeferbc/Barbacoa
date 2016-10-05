@@ -1,36 +1,33 @@
 package jeffersonbernalcardona.barbacoa;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
+import android.widget.Toast;
 
-
-/**
- * Created by Aldebarantech on 19/09/2016.
- */
-public class MenuActivity extends AppCompatActivity {
+public class PromocionActivity extends AppCompatActivity {
     private ViewPager mViewPager;
-    private String lUser,lCorreo;
+    private int selection = 99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu);
+        setContentView(R.layout.activity_promocion);
+        Initialize();
         PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager = (ViewPager) findViewById(R.id.Pager);
         mViewPager.setAdapter(adapter);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        ActionBar.TabListener tabListener= new ActionBar.TabListener()
-        {
+        ActionBar.TabListener tabListener = new ActionBar.TabListener(){
 
             /**
              * Called when a tab enters the selected state.
@@ -42,7 +39,12 @@ public class MenuActivity extends AppCompatActivity {
              */
             @Override
             public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-                mViewPager.setCurrentItem(tab.getPosition());
+                if (selection != 99) {
+                    mViewPager.setCurrentItem(selection);
+                    selection = 99;
+                }else
+                    mViewPager.setCurrentItem(tab.getPosition());
+
             }
 
             /**
@@ -71,11 +73,15 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         };
-        ActionBar.Tab tab = actionBar.newTab().setText("Hamburguesas").setTabListener(tabListener);
+        ActionBar.Tab tab = actionBar.newTab().setText("Promocion 1").setTabListener(tabListener);
         actionBar.addTab (tab);
-        tab = actionBar.newTab().setText("Others").setTabListener(tabListener);
+        tab = actionBar.newTab().setText("Promocion 2").setTabListener(tabListener);
         actionBar.addTab (tab);
-        tab = actionBar.newTab().setText("Cervezas").setTabListener(tabListener);
+        tab = actionBar.newTab().setText("Promocion 3").setTabListener(tabListener);
+        actionBar.addTab (tab);
+        tab = actionBar.newTab().setText("Promocion 4").setTabListener(tabListener);
+        actionBar.addTab (tab);
+        tab = actionBar.newTab().setText("Promocion 5").setTabListener(tabListener);
         actionBar.addTab (tab);
 
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
@@ -83,11 +89,22 @@ public class MenuActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 getSupportActionBar().setSelectedNavigationItem(position);
 
+
             }
         });
-
-
     }
+
+
+    private void Initialize() {
+        try{
+            Bundle extras = getIntent().getExtras();           //obtiene el intent que lo llevo alli, y obtiene los extras
+            selection = extras.getInt("Eleccion");
+
+        }catch (Exception e){
+        }
+    }
+
+
     public class PagerAdapter extends FragmentPagerAdapter {
         public PagerAdapter(FragmentManager fm) {
             super(fm);
@@ -96,37 +113,18 @@ public class MenuActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             switch (position){
-                case 0: return new HamburguerFragment();
-                case 1: return new OthersFragment();
-                case 2: return new CervezasFragment();
+                case 0: return new PromocionFragment1();
+                case 1: return new Promocion2Fragment();
+                case 2: return new Promocion3Fragment();
+                case 3: return new Promocion4Fragment();
+                case 4: return new Promocion5Fragment();
                 default: return null;
             }
         }
 
         @Override
         public int getCount() {
-            return 3;
+            return 5;
         }
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menumenu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.mMiperfil:
-                Intent intent=new Intent(this,ProfileActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.Inicio:
-                Intent intentMenu=new Intent(this,MainActivity.class);
-                startActivity(intentMenu);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 }

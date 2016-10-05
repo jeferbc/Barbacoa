@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".PromocionActivity"></activity>
     </application>
 
 </manifest>
